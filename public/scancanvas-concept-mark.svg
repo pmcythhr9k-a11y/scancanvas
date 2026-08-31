@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">ScanCanvas concept mark</title>
+  <desc id="desc">An open image frame containing three offset scan-slice lines.</desc>
+  <path d="M52 8H12V56H52" stroke="#142832" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M24 21H49M28 32H49M32 43H49" stroke="#0B5F76" stroke-width="4.5" stroke-linecap="square"/>
+</svg>
