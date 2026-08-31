@@ -34,6 +34,17 @@ next-env.d.ts
 *.pem
 Thumbs.db
 
-# Private
+# Internal Planning, Research & Design Docs
+/00_READ_ME_FIRST.md
+/01_PRODUCT
+/02_UX
+/03_DESIGN
+/04_TECHNICAL
+/05_DATA_AND_ASSETS
+/06_QUALITY
 /07_HACKATHON
 /08_RESEARCH
+/09_REFERENCE
+/10_PROMPTS
+/IMPLEMENTATION_BRIEF.md
+/real_life_test_report.md

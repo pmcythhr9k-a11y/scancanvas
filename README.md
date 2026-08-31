@@ -12,12 +12,20 @@
 ## 🧭 Core Highlights
 
 * **Zero-Pixel Privacy Architecture**: 100% of MRI DICOM pixel bytes remain strictly local in the browser. Zero image bytes are sent to cloud AI services.
-* **PACS-Grade Interactive Viewer**: Full slice navigation, pan, zoom, brightness/contrast windowing, and keyboard controls (`Arrow keys`, `+`, `-`, `0`).
+* **PACS-Grade Interactive Viewer**: Multi-planar slice navigation across Sagittal, Coronal, and Axial series with pan, zoom, brightness/contrast windowing, and keyboard navigation (`Arrow keys`, `+`, `-`, `0`).
 * **Synchronized 3-View Orthogonal MPR**: Reconstructs Axial, Coronal, and Sagittal orthogonal cross-sections with linked crosshairs whenever DICOM orientation geometry qualifies.
 * **Deterministic Evidence Thread**: 100% of simplified plain-English statements link directly to an exact signed report sentence via the *"Show exact wording"* action.
 * **Strict Clinical Scope Filter**: Deterministically rejects speculative diagnoses, urgency scoring, disease probabilities, and treatment recommendations.
 * **Neutral Change Timeline**: Compares multi-year reports while returning safe refusals rather than over-interpreting descriptive variations.
 * **Appointment Pack Builder**: Generates an editable questions list, printable high-contrast brief, and complete `.ZIP` container with original unmodified DICOM files and cryptographic checksums.
+
+---
+
+## 🤖 AI Models & Engineering Methodology
+
+* **Core Agent Workflow:** Built using **Gemini 3.7 Flash** for high-throughput, low-latency report explanation, structured JSON output generation, and real-time deterministic schema validation.
+* **Extended Reasoning & Multi-Turn Research:** Tested and validated using **Gemini 3.1 Pro** for complex multi-series radiological comparisons, longitudinal report trajectory modeling, and safety edge-case evaluation.
+* **Deterministic Verification Layer:** An offline deterministic verifier cross-references every AI-generated claim against exact signed report spans, enforcing zero hallucinations and rejecting prohibited clinical claims prior to patient rendering.
 
 ---
 
@@ -82,7 +90,7 @@ ScanCanvas grounds its anatomical models, imaging sequences, and educational des
 ### Installation & Local Run
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/scancanvas.git
+git clone https://github.com/pmcythhr9k-a11y/scancanvas.git
 cd scancanvas
 
 # 2. Install dependencies
@@ -113,6 +121,7 @@ npx tsx scripts/verify-all.ts
 - ✅ **Test 3**: 3D Multiplanar Reconstruction (MPR) Voxel Slicing
 - ✅ **Test 4**: Deterministic Evidence Grounding & Banned-Claim Safety Filter
 - ✅ **Test 5**: Web Crypto SHA-256 Determinism
+- ✅ **Test 6**: Real-Life Intake Scenarios (Hospital CD, Portal ZIP, Mixed IMA)
 
 ---
 
