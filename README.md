@@ -125,18 +125,16 @@ npx tsx scripts/verify-all.ts
 
 ---
 
-## ☁️ Google Cloud Run Deployment
+## ☁️ How ScanCanvas Runs
 
-The project includes a production multi-stage `Dockerfile`:
+ScanCanvas is a single Next.js application with two clearly separated lanes:
 
-```bash
-# Build and deploy to Google Cloud Run
-gcloud run deploy scancanvas \
-  --source . \
-  --project YOUR_PROJECT_ID \
-  --region europe-west2 \
-  --allow-unauthenticated
-```
+1. **Local lane (your browser).** Folder, ZIP and DICOM intake, Part 10 parsing, series grouping, SHA-256 checksums, the PACS-style viewer, the 3-view MPR reconstruction and the Appointment Pack export all execute in the browser, largely inside a Web Worker. No image bytes ever leave the device.
+2. **Cloud lane (text only).** When you explicitly approve it, the signed report *text* is sent to the application's own API, hosted as a container on **Google Cloud Run**. There, **Gemini 3.7 Flash** produces structured, source-linked plain-English explanation cards. A deterministic verifier then checks every card against the exact report wording and rejects anything outside the allowed clinical scope before the result is returned. **Gemini 3.1 Pro** was used during development to stress-test comparisons and safety edge cases.
+
+The API keeps no copy of report text and stores no images. Cloud credentials and project settings are supplied through the hosting environment; none are kept in this repository.
+
+The included multi-stage `Dockerfile` builds a production image you can run on Cloud Run or any container host of your choosing.
 
 ---
 
