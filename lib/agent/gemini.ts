@@ -1,4 +1,6 @@
-// Gemini 3.7 Flash Agent Workflow & Vertex AI Integration
+// Report explanation workflow: deterministic grounding + verification.
+// The model call itself lives in gemini-server.ts and is only ever imported by API routes,
+// so no prompt or project configuration reaches the client bundle.
 
 import { EvidenceCard, ReportExplanationResponse } from './schemas';
 import { verifyEvidenceCards } from './verifier';
@@ -198,9 +200,12 @@ const GOLD_VERIFIED_CARDS: EvidenceCard[] = [
 /**
  * Execute Cloud Report Explanation Workflow
  */
+export type ModelCaller = (reportText: string) => Promise<EvidenceCard[] | null>;
+
 export async function runReportExplanationWorkflow(
   reportText: string,
-  caseId: string = 'synthetic-knee-case'
+  caseId: string = 'synthetic-knee-case',
+  modelCaller?: ModelCaller
 ): Promise<ReportExplanationResponse> {
   const startTime = Date.now();
   const patientNotice =
@@ -212,7 +217,7 @@ export async function runReportExplanationWorkflow(
   let provider = 'Google Vertex AI / Deterministic Grounded Engine';
 
   try {
-    const vertexCards = await callGeminiModel(reportText);
+    const vertexCards = modelCaller ? await modelCaller(reportText) : null;
     if (vertexCards && vertexCards.length > 0) {
       rawCards = vertexCards;
       provider = 'Google Vertex AI';
@@ -270,59 +275,4 @@ export async function runReportExplanationWorkflow(
     },
     telemetry,
   };
-}
-
-async function callGeminiModel(reportText: string): Promise<EvidenceCard[] | null> {
-  // Check if running on server with Google Cloud credentials
-  const projectId = process.env.GOOGLE_CLOUD_PROJECT || 'YOUR_PROJECT_ID';
-  const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
-  const modelName = 'gemini-3.7-flash'; // active Vertex AI model endpoint
-
-  // If executing inside Next.js API route, check gcloud ADC or GEMINI_API_KEY
-  const prompt = `You are a specialized medical-record explanation assistant for ScanCanvas.
-Analyze the following signed radiology report text. Convert the findings into faithful, everyday-language explanation cards.
-
-CRITICAL NON-NEGOTIABLE SAFETY RULES:
-1. Do NOT diagnose conditions or create new findings not in the text.
-2. Do NOT generate disease probabilities, severity scores, urgency estimates, or triage levels.
-3. Do NOT recommend treatments, surgery, medications, exercises, or return-to-sport advice.
-4. Preserve all uncertainty words exactly (e.g. "possible", "likely", "suggestive of", "cannot exclude", "partial").
-5. Every single explanation MUST include the exact source sentence quoted verbatim from the report in "sourceSentence".
-6. In "whatIsNotAnswered", explicitly list what the radiologist did not address (e.g., treatment plan, timeline).
-7. In "suggestedQuestion", create a calm question the patient can ask their doctor.
-
-REPORT TEXT:
-${reportText}
-
-Return a valid JSON array of objects with the schema:
-[
-  {
-    "claimId": "string",
-    "section": "impression" | "findings" | "technique" | "clinical_indication",
-    "sourceSpanId": "string",
-    "sourceSentence": "exact verbatim quote from report",
-    "plainEnglish": "faithful everyday explanation",
-    "certaintyLanguage": "possible" | "likely" | "suggestive_of" | "cannot_exclude" | "none_explicit" | "normal",
-    "negated": boolean,
-    "laterality": "left" | "right" | "bilateral" | "unspecified",
-    "provenanceLabel": "Directly stated in report" | "Faithfully simplified",
-    "generalEducation": {
-      "title": "Anatomy/Term title",
-      "explanation": "Neutral anatomical definition",
-      "trustedUrl": "optional URL"
-    },
-    "whatIsNotAnswered": ["string"],
-    "suggestedQuestion": "string",
-    "verifier": {
-      "sourceExists": true,
-      "meaningPreserved": true,
-      "bannedClaimDetected": false
-    }
-  }
-]`;
-
-  if (typeof fetch === 'undefined') return null;
-
-  // If running in local node environment with ADC access:
-  return null; // Graceful handoff to gold verified cards with live fallback
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runReportExplanationWorkflow } from '@/lib/agent/gemini';
 import { recordCaseProvenance } from '@/lib/agent/firestore';
+import { callGeminiModel } from '@/lib/agent/gemini-server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Execute agent explanation workflow
-    const result = await runReportExplanationWorkflow(reportText, caseId);
+    const result = await runReportExplanationWorkflow(reportText, caseId, callGeminiModel);
 
     // Record Firestore provenance checkpoint
     await recordCaseProvenance(

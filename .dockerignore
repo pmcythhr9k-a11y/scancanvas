@@ -4,7 +4,24 @@ node_modules
 npm-debug.log
 .next
 .git
-.agents
 .gemini
-08_RESEARCH
+.agents
+.env*
+
+# Internal planning, research, prompt and log material must never enter the image
+00_READ_ME_FIRST.md
+01_PRODUCT
+02_UX
+03_DESIGN
 04_TECHNICAL
+05_DATA_AND_ASSETS
+06_QUALITY
+07_HACKATHON
+08_RESEARCH
+09_REFERENCE
+10_PROMPTS
+IMPLEMENTATION_BRIEF.md
+real_life_test_report.md
+devlog
+public/*.pdf
+public/scancanvas_technical_architecture.jpg

@@ -134,7 +134,7 @@ The project includes a production multi-stage `Dockerfile`:
 gcloud run deploy scancanvas \
   --source . \
   --project YOUR_PROJECT_ID \
-  --region us-central1 \
+  --region europe-west2 \
   --allow-unauthenticated
 ```
 
